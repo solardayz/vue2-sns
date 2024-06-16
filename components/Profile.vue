@@ -16,7 +16,12 @@
     </v-card-text>
   </v-card>
   <v-alert v-else-if="error" type="error">{{ error }}</v-alert>
-  <v-progress-circular v-else size="64"></v-progress-circular>
+  <v-progress-circular
+    v-else
+    size="64"
+    indeterminate
+    color="primary"
+  ></v-progress-circular>
 </template>
 
 <script>
@@ -32,7 +37,7 @@ export default {
   async created() {
     try {
       const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/users/1"
+        "https://jsonplaceholder.typicode.com/users/2"
       );
       this.user = response.data;
       // For demonstration purposes, using a placeholder avatar image

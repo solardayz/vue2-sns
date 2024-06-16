@@ -2,7 +2,14 @@
   <div>
     <h1>Photos from Album 1</h1>
     <div v-if="error" class="error">{{ error }}</div>
-    <div v-if="loading">Loading...</div>
+    <v-row v-if="loading">
+      <v-col cols="12" class="text-center">
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
+      </v-col>
+    </v-row>
     <v-container v-else>
       <v-row>
         <v-col v-for="photo in photos" :key="photo.id" cols="12" sm="6" md="4">
@@ -32,10 +39,12 @@ export default {
   methods: {
     async fetchPhotos() {
       try {
+        this.loading = true;
         const response = await axios.get(
           "https://jsonplaceholder.typicode.com/albums/1/photos"
         );
         this.photos = response.data;
+        this.loading = false;
       } catch (error) {
         this.error = "Failed to load photos";
         console.error(error);

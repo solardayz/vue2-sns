@@ -42,7 +42,7 @@ export default {
     this.loading = true;
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/photos"
+        "https://jsonplaceholder.typicode.com/albums/4/photos"
       );
       if (!response.ok) {
         throw new Error("Failed to fetch favorites");
