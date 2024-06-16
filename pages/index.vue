@@ -38,10 +38,11 @@ export default {
   },
   methods: {
     async fetchPhotos() {
+      const userId = Math.floor(Math.random() * 20) + 1;
       try {
         this.loading = true;
         const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/albums/1/photos"
+          `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
         );
         this.photos = response.data;
         this.loading = false;

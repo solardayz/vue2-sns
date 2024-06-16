@@ -41,8 +41,9 @@ export default {
   async created() {
     this.loading = true;
     try {
+      const userId = Math.floor(Math.random() * 20) + 1;
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/albums/4/photos"
+        `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch favorites");

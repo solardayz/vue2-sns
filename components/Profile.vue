@@ -35,9 +35,11 @@ export default {
     };
   },
   async created() {
+    const userId = Math.floor(Math.random() * 10) + 1;
+    console.log(`userId=====${userId}`);
     try {
       const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/users/2"
+        `https://jsonplaceholder.typicode.com/users/${userId}`
       );
       this.user = response.data;
       // For demonstration purposes, using a placeholder avatar image

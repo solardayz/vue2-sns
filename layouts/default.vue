@@ -25,6 +25,11 @@
             <span>Favorites</span>
             <v-icon>mdi-heart</v-icon>
           </v-btn>
+          <v-btn value="exercise" to="/exercise">
+            <!-- Link to the "Exercise" view -->
+            <span>Exercise</span>
+            <v-icon>mdi-dumbbell</v-icon>
+          </v-btn>
           <v-btn value="profile" to="/profile">
             <!-- Link to the "Profile" view -->
             <span>Profile</span>
