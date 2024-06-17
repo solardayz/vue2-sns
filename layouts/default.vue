@@ -30,6 +30,11 @@
             <span>Exercise</span>
             <v-icon>mdi-dumbbell</v-icon>
           </v-btn>
+
+          <v-btn value="shop" to="/shop">
+            <span>Shop</span>
+            <v-icon>mdi-cart</v-icon>
+          </v-btn>
           <v-btn value="profile" to="/profile">
             <!-- Link to the "Profile" view -->
             <span>Profile</span>
