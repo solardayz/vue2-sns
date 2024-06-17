@@ -36,7 +36,6 @@ export default {
   },
   async created() {
     const userId = Math.floor(Math.random() * 10) + 1;
-    console.log(`userId=====${userId}`);
     try {
       const response = await axios.get(
         `https://jsonplaceholder.typicode.com/users/${userId}`
