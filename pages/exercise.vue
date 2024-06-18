@@ -14,34 +14,49 @@
             <v-col cols="12" md="6">
               <v-card class="mb-4">
                 <v-card-title>새로운 운동 기록 추가</v-card-title>
-                <v-card-text>
-                  <v-form @submit.prevent="addExerciseRecord">
-                    <v-text-field
-                      v-model="selectedDate"
-                      label="날짜"
-                      type="date"
-                      required
-                      class="mb-3"
-                    ></v-text-field>
-                    <v-select
-                      v-model="selectedExerciseType"
-                      :items="exerciseTypes"
-                      label="운동 종류"
-                      required
-                      class="mb-3"
-                    ></v-select>
-                    <v-text-field
-                      v-model.number="rounds"
-                      label="라운드 수"
-                      type="number"
-                      required
-                      class="mb-3"
-                    ></v-text-field>
-                    <v-btn type="submit" color="primary" large block
-                      >추가</v-btn
-                    >
-                  </v-form>
-                </v-card-text>
+                <v-card>
+                  <v-card-text>
+                    <v-form @submit.prevent="addExerciseRecord">
+                      <v-row>
+                        <v-col cols="12" md="6">
+                          <v-text-field
+                            v-model="selectedDate"
+                            label="날짜"
+                            type="date"
+                            required
+                            outlined
+                            class="mb-3"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-select
+                            v-model="selectedExerciseType"
+                            :items="exerciseTypes"
+                            label="운동 종류"
+                            required
+                            outlined
+                            class="mb-3"
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model.number="rounds"
+                            label="라운드 수"
+                            type="number"
+                            required
+                            outlined
+                            class="mb-3"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                      <v-row justify="center">
+                        <v-btn type="submit" color="primary" large icon>
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </v-row>
+                    </v-form>
+                  </v-card-text>
+                </v-card>
               </v-card>
             </v-col>
           </v-row>
@@ -197,7 +212,6 @@ const gradients = [
 export default {
   data() {
     return {
-      // New data properties to be merged
       width: 2,
       radius: 10,
       padding: 8,
@@ -236,125 +250,90 @@ export default {
       },
       snackbar: false,
       snackbarMessage: "",
-      snackbarColor: "success", // success, error, warning 등을 선택할 수 있습니다.
+      snackbarColor: "success",
     };
   },
   computed: {
     sortedExerciseRecords() {
-      return this.exerciseRecords
-        .slice()
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+      return this.exerciseRecords.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
     },
     chartData() {
-      return this.sortedExerciseRecords.map((record) => {
-        const totalRounds = record.exercises.reduce(
+      return this.sortedExerciseRecords.map((record) => ({
+        date: record.date,
+        totalRounds: record.exercises.reduce(
           (sum, exercise) => sum + exercise.rounds,
           0
-        );
-        return {
-          date: record.date,
-          totalRounds,
-        };
-      });
+        ),
+      }));
     },
     today() {
       return new Date().toLocaleDateString();
     },
   },
   created() {
-    this.generateDummyData(10); // 10개의 더미 데이터 생성
-    // 오늘 날짜를 ISO 포맷으로 변환하여 selectedDate에 설정
     this.selectedDate = new Date().toISOString().substr(0, 10);
     this.selectedExerciseType = this.exerciseTypes[0];
+    this.generateDummyData(10);
   },
   methods: {
     generateDummyData(count) {
       const today = new Date();
-      const exerciseRecords = [];
-
-      for (let i = 0; i < count; i++) {
-        const randomDate = this.randomDate(today);
-        const exercises = this.generateRandomExercises();
-
-        exerciseRecords.push({
-          date: randomDate,
-          exercises: exercises,
-        });
-      }
-
-      this.exerciseRecords = exerciseRecords;
+      this.exerciseRecords = Array.from({ length: count }, () => ({
+        date: this.randomDate(today),
+        exercises: this.generateRandomExercises(),
+      }));
       this.updateChart();
     },
     randomDate(today) {
-      const start = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000); // 30일 이내의 날짜에서 랜덤 선택
-      const end = today;
+      const start = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
       const randomDate = new Date(
-        start.getTime() + Math.random() * (end.getTime() - start.getTime())
+        start.getTime() + Math.random() * (today.getTime() - start.getTime())
       );
-      return randomDate.toISOString().split("T")[0]; // 날짜 포맷을 맞추기 위해 ISO 8601 포맷 사용
+      return randomDate.toISOString().split("T")[0];
     },
     generateRandomExercises() {
-      const numExercises = Math.floor(Math.random() * 3) + 5; // 5~7개의 운동 종류를 랜덤 선택
-      const exercises = [];
-
-      for (let i = 0; i < numExercises; i++) {
-        const exerciseType =
-          this.exerciseTypes[
-            Math.floor(Math.random() * this.exerciseTypes.length)
-          ];
-        const rounds = Math.floor(Math.random() * 10) + 1; // 1~10 라운드 수를 랜덤 선택
-
-        exercises.push({
-          type: exerciseType,
-          rounds: rounds,
-        });
-      }
-
-      return exercises;
+      return Array.from({ length: Math.floor(Math.random() * 3) + 5 }, () => ({
+        type: this.exerciseTypes[
+          Math.floor(Math.random() * this.exerciseTypes.length)
+        ],
+        rounds: Math.floor(Math.random() * 10) + 1,
+      }));
     },
     addExerciseRecord() {
-      const date = this.selectedDate || new Date().toISOString().split("T")[0]; // 입력된 날짜를 사용, 없으면 현재 날짜 사용
+      const date = this.selectedDate || new Date().toISOString().split("T")[0];
       let record = this.exerciseRecords.find((rec) => rec.date === date);
 
       if (!record) {
-        // 해당 날짜에 해당하는 기록이 없으면 새로운 객체 생성
         record = { date, exercises: [] };
         this.exerciseRecords.push(record);
       }
 
-      // 선택한 운동 종류와 라운드 수를 기록에 추가
       record.exercises.push({
         type: this.selectedExerciseType,
         rounds: this.rounds,
       });
 
-      // 운동 기록 내림차순 정렬
       this.exerciseRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      // 차트 데이터 업데이트
       this.updateChart();
     },
-
     deleteExercise(date, index) {
       const record = this.exerciseRecords.find((rec) => rec.date === date);
       if (record) {
-        record.exercises.splice(index, 1); // 해당 인덱스의 운동 기록 삭제
+        record.exercises.splice(index, 1);
         if (record.exercises.length === 0) {
-          // 만약 기록이 더 이상 없다면 전체 기록에서도 삭제
-          const recordIndex = this.exerciseRecords.indexOf(record);
-          this.exerciseRecords.splice(recordIndex, 1);
+          this.exerciseRecords = this.exerciseRecords.filter(
+            (rec) => rec.date !== date
+          );
         }
-        // 차트 데이터 업데이트
         this.updateChart();
       }
     },
     updateChart() {
-      // 날짜 레이블 설정
       this.chartLabels = this.sortedExerciseRecords.map(
         (record) => record.date
       );
-
-      // 데이터셋 설정
       this.chartDatasets[0].data = this.sortedExerciseRecords.map((record) =>
         record.exercises.reduce(
           (totalRounds, exercise) => totalRounds + exercise.rounds,
@@ -362,7 +341,6 @@ export default {
         )
       );
     },
-
     getColor(value) {
       if (value > 20) return "success";
       if (value > 10) return "warning";

@@ -22,7 +22,7 @@
             <v-img :src="favorite.thumbnailUrl" height="200"></v-img>
             <v-card-title>{{ favorite.title }}</v-card-title>
             <v-card-subtitle>{{ favorite.id }}</v-card-subtitle>
-            <!-- Add additional fields as needed -->
+            <!-- 필요한 추가 필드 -->
           </v-card>
         </v-col>
       </v-row>
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -41,23 +43,34 @@ export default {
   async created() {
     this.loading = true;
     try {
-      const userId = Math.floor(Math.random() * 20) + 1;
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch favorites");
-      }
-      this.favorites = await response.json();
+      await this.fetchFavorites();
     } catch (error) {
       console.error("Error fetching favorites:", error);
     } finally {
       this.loading = false;
     }
   },
+  methods: {
+    async fetchFavorites() {
+      const userId = Math.floor(Math.random() * 20) + 1;
+      try {
+        const response = await axios.get(
+          `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
+        );
+        this.favorites = response.data;
+      } catch (error) {
+        throw new Error("Failed to fetch favorites");
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Add scoped styles here */
+.text-center {
+  text-align: center;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
 </style>
