@@ -35,18 +35,25 @@ export default {
     };
   },
   async created() {
-    const userId = Math.floor(Math.random() * 10) + 1;
-    try {
-      const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/users/${userId}`
-      );
-      this.user = response.data;
-      // For demonstration purposes, using a placeholder avatar image
-      this.user.avatar = `https://i.pravatar.cc/150?u=${this.user.email}`; // Generate avatar URL
-    } catch (error) {
-      this.error = "Failed to fetch user profile";
-      console.error(error);
-    }
+    await this.fetchUser();
+  },
+  methods: {
+    async fetchUser() {
+      const userId = Math.floor(Math.random() * 10) + 1;
+      try {
+        const response = await axios.get(
+          `https://jsonplaceholder.typicode.com/users/${userId}`
+        );
+        this.user = response.data;
+        this.user.avatar = this.generateAvatarUrl(this.user.email);
+      } catch (error) {
+        this.error = "Failed to fetch user profile";
+        console.error(error);
+      }
+    },
+    generateAvatarUrl(email) {
+      return `https://i.pravatar.cc/150?u=${email}`;
+    },
   },
 };
 </script>

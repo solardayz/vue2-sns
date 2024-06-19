@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <h1>Photos from Album 1</h1>
-    <div v-if="error" class="error">{{ error }}</div>
-    <v-row v-if="loading">
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <h1 class="text-center">Photos from Album 1</h1>
+        <v-alert v-if="error" type="error" dismissible>
+          {{ error }}
+        </v-alert>
+      </v-col>
+    </v-row>
+    <v-row justify="center" v-if="loading">
       <v-col cols="12" class="text-center">
         <v-progress-circular
           indeterminate
@@ -17,7 +23,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -58,8 +64,7 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here */
-.error {
-  color: red;
+.text-center {
+  text-align: center;
 }
 </style>
